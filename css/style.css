@@ -1,4 +1,4 @@
-<style>
+
     :root {
       /* Light Theme Variables */
       --primary: #3b82f6;
@@ -846,4 +846,4 @@
     .animate {
       animation: fadeInUp 0.6s ease forwards;
     }
-  </style>
+  
