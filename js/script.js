@@ -1,4 +1,4 @@
-<script>
+
     // DOM Elements
     const cartIcon = document.getElementById('cartIcon');
     const cartSidebar = document.getElementById('cartSidebar');
@@ -364,4 +364,3 @@
         card.style.animationDelay = `${index * 0.1}s`;
       });
     });
-  </script>
