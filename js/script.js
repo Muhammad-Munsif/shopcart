@@ -1,4 +1,4 @@
-<script>
+
     // Enhanced Shopping Cart Application
     document.addEventListener('DOMContentLoaded', () => {
       // Initialize the application
@@ -866,4 +866,4 @@
     window.addToCart = addToCart;
     window.toggleCart = toggleCart;
     window.completeCheckout = completeCheckout;
-  </script>
+  
