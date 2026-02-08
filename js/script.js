@@ -1,298 +1,298 @@
 
-    // Enhanced Shopping Cart Application
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize the application
-      init();
-    });
+// Enhanced Shopping Cart Application
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize the application
+  init();
+});
 
-    // Global State
-    let cart = [];
-    let currentProducts = [];
-    let activeCategory = 'all';
+// Global State
+let cart = [];
+let currentProducts = [];
+let activeCategory = 'all';
 
-    // DOM Elements
-    const elements = {
-      cartIcon: document.getElementById('cartIcon'),
-      cartSidebar: document.getElementById('cartSidebar'),
-      closeCart: document.getElementById('closeCart'),
-      overlay: document.getElementById('overlay'),
-      cartItemsContainer: document.getElementById('cartItems'),
-      cartSubtotal: document.getElementById('cartSubtotal'),
-      cartTotal: document.getElementById('cartTotal'),
-      checkoutBtn: document.getElementById('checkoutBtn'),
-      cartCount: document.querySelector('.cart-count'),
-      productGrid: document.getElementById('productGrid'),
-      productsCount: document.getElementById('productsCount'),
-      toast: document.getElementById('toast'),
-      toastMessage: document.getElementById('toastMessage'),
-      themeToggle: document.getElementById('themeToggle'),
-      shippingCost: document.getElementById('shippingCost'),
-      discount: document.getElementById('discount'),
-      mobileMenuBtn: document.getElementById('mobileMenuBtn'),
-      navLinks: document.getElementById('navLinks'),
-      header: document.getElementById('header'),
-      exploreBtn: document.getElementById('exploreBtn'),
-      loadingSpinner: document.getElementById('loadingSpinner'),
-      categories: document.getElementById('categories'),
-      contactForm: document.getElementById('contactForm')
-    };
+// DOM Elements
+const elements = {
+  cartIcon: document.getElementById('cartIcon'),
+  cartSidebar: document.getElementById('cartSidebar'),
+  closeCart: document.getElementById('closeCart'),
+  overlay: document.getElementById('overlay'),
+  cartItemsContainer: document.getElementById('cartItems'),
+  cartSubtotal: document.getElementById('cartSubtotal'),
+  cartTotal: document.getElementById('cartTotal'),
+  checkoutBtn: document.getElementById('checkoutBtn'),
+  cartCount: document.querySelector('.cart-count'),
+  productGrid: document.getElementById('productGrid'),
+  productsCount: document.getElementById('productsCount'),
+  toast: document.getElementById('toast'),
+  toastMessage: document.getElementById('toastMessage'),
+  themeToggle: document.getElementById('themeToggle'),
+  shippingCost: document.getElementById('shippingCost'),
+  discount: document.getElementById('discount'),
+  mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+  navLinks: document.getElementById('navLinks'),
+  header: document.getElementById('header'),
+  exploreBtn: document.getElementById('exploreBtn'),
+  loadingSpinner: document.getElementById('loadingSpinner'),
+  categories: document.getElementById('categories'),
+  contactForm: document.getElementById('contactForm')
+};
 
-    // Enhanced Product Data
-    const products = [
-      {
-        id: 1,
-        title: "Premium Wireless Headphones",
-        price: 129.99,
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "Noise-cancelling wireless headphones with premium sound quality and 30-hour battery life.",
-        rating: 4.5,
-        reviews: 128,
-        category: "electronics",
-        badges: ["Bestseller", "-20%"],
-        colors: ["Black", "White", "Blue"],
-        stock: 15
-      },
-      {
-        id: 2,
-        title: "Smart Fitness Watch Pro",
-        price: 249.99,
-        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "Track your health and fitness with this advanced smartwatch featuring ECG and blood oxygen monitoring.",
-        rating: 4.7,
-        reviews: 89,
-        category: "electronics",
-        badges: ["New", "Limited"],
-        colors: ["Black", "Silver", "Gold"],
-        stock: 8
-      },
-      {
-        id: 3,
-        title: "Wireless Bluetooth Speaker",
-        price: 79.99,
-        image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "Portable Bluetooth speaker with 360° immersive sound and 12-hour battery life.",
-        rating: 4.3,
-        reviews: 56,
-        category: "electronics",
-        badges: ["Popular"],
-        colors: ["Black", "Red", "Blue"],
-        stock: 25
-      },
-      {
-        id: 4,
-        title: "Professional DSLR Camera",
-        price: 899.99,
-        image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "Capture stunning photos with this professional-grade camera featuring 4K video recording.",
-        rating: 4.9,
-        reviews: 42,
-        category: "electronics",
-        badges: ["Premium"],
-        colors: ["Black"],
-        stock: 5
-      },
-      {
-        id: 5,
-        title: "Gaming Laptop Pro",
-        price: 1299.99,
-        image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "High-performance gaming laptop with RTX 4070 graphics and 240Hz refresh rate display.",
-        rating: 4.8,
-        reviews: 67,
-        category: "electronics",
-        badges: ["Gaming"],
-        colors: ["Black", "RGB"],
-        stock: 12
-      },
-      {
-        id: 6,
-        title: "Smart Home Assistant",
-        price: 59.99,
-        image: "https://images.unsplash.com/photo-1543512214-318c7553f230?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "Voice-controlled smart home assistant with premium sound and home automation features.",
-        rating: 4.4,
-        reviews: 112,
-        category: "electronics",
-        badges: ["Smart Home"],
-        colors: ["Black", "White"],
-        stock: 30
-      },
-      {
-        id: 7,
-        title: "Wireless Earbuds Pro",
-        price: 89.99,
-        image: "https://images.unsplash.com/photo-1590658165737-15a047b8b5e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "True wireless earbuds with active noise cancellation and transparency mode.",
-        rating: 4.6,
-        reviews: 93,
-        category: "electronics",
-        badges: ["Wireless"],
-        colors: ["White", "Black", "Pink"],
-        stock: 20
-      },
-      {
-        id: 8,
-        title: "Tablet Pro 12.9\"",
-        price: 499.99,
-        image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        description: "Professional tablet with stunning Liquid Retina XDR display and M2 chip performance.",
-        rating: 4.7,
-        reviews: 78,
-        category: "electronics",
-        badges: ["Pro"],
-        colors: ["Space Gray", "Silver"],
-        stock: 18
+// Enhanced Product Data
+const products = [
+  {
+    id: 1,
+    title: "Premium Wireless Headphones",
+    price: 129.99,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "Noise-cancelling wireless headphones with premium sound quality and 30-hour battery life.",
+    rating: 4.5,
+    reviews: 128,
+    category: "electronics",
+    badges: ["Bestseller", "-20%"],
+    colors: ["Black", "White", "Blue"],
+    stock: 15
+  },
+  {
+    id: 2,
+    title: "Smart Fitness Watch Pro",
+    price: 249.99,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "Track your health and fitness with this advanced smartwatch featuring ECG and blood oxygen monitoring.",
+    rating: 4.7,
+    reviews: 89,
+    category: "electronics",
+    badges: ["New", "Limited"],
+    colors: ["Black", "Silver", "Gold"],
+    stock: 8
+  },
+  {
+    id: 3,
+    title: "Wireless Bluetooth Speaker",
+    price: 79.99,
+    image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "Portable Bluetooth speaker with 360° immersive sound and 12-hour battery life.",
+    rating: 4.3,
+    reviews: 56,
+    category: "electronics",
+    badges: ["Popular"],
+    colors: ["Black", "Red", "Blue"],
+    stock: 25
+  },
+  {
+    id: 4,
+    title: "Professional DSLR Camera",
+    price: 899.99,
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "Capture stunning photos with this professional-grade camera featuring 4K video recording.",
+    rating: 4.9,
+    reviews: 42,
+    category: "electronics",
+    badges: ["Premium"],
+    colors: ["Black"],
+    stock: 5
+  },
+  {
+    id: 5,
+    title: "Gaming Laptop Pro",
+    price: 1299.99,
+    image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "High-performance gaming laptop with RTX 4070 graphics and 240Hz refresh rate display.",
+    rating: 4.8,
+    reviews: 67,
+    category: "electronics",
+    badges: ["Gaming"],
+    colors: ["Black", "RGB"],
+    stock: 12
+  },
+  {
+    id: 6,
+    title: "Smart Home Assistant",
+    price: 59.99,
+    image: "https://images.unsplash.com/photo-1543512214-318c7553f230?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "Voice-controlled smart home assistant with premium sound and home automation features.",
+    rating: 4.4,
+    reviews: 112,
+    category: "electronics",
+    badges: ["Smart Home"],
+    colors: ["Black", "White"],
+    stock: 30
+  },
+  {
+    id: 7,
+    title: "Wireless Earbuds Pro",
+    price: 89.99,
+    image: "https://images.unsplash.com/photo-1590658165737-15a047b8b5e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "True wireless earbuds with active noise cancellation and transparency mode.",
+    rating: 4.6,
+    reviews: 93,
+    category: "electronics",
+    badges: ["Wireless"],
+    colors: ["White", "Black", "Pink"],
+    stock: 20
+  },
+  {
+    id: 8,
+    title: "Tablet Pro 12.9\"",
+    price: 499.99,
+    image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    description: "Professional tablet with stunning Liquid Retina XDR display and M2 chip performance.",
+    rating: 4.7,
+    reviews: 78,
+    category: "electronics",
+    badges: ["Pro"],
+    colors: ["Space Gray", "Silver"],
+    stock: 18
+  }
+];
+
+// Initialize the application
+function init() {
+  currentProducts = [...products];
+  renderProducts();
+  loadCart();
+  updateCart();
+  setupEventListeners();
+  updateProductsCount();
+  loadTheme();
+  setupScrollEffects();
+  setupCategoryFilters();
+}
+
+// Setup event listeners
+function setupEventListeners() {
+  // Toggle cart sidebar
+  elements.cartIcon.addEventListener('click', toggleCart);
+  elements.closeCart.addEventListener('click', toggleCart);
+  elements.overlay.addEventListener('click', toggleCart);
+
+  // Add to cart buttons
+  elements.productGrid.addEventListener('click', (e) => {
+    if (e.target.closest('.add-to-cart-btn')) {
+      const productId = parseInt(e.target.closest('.add-to-cart-btn').dataset.id);
+      const product = currentProducts.find(p => p.id === productId);
+      if (product) {
+        addToCart(product);
       }
-    ];
-
-    // Initialize the application
-    function init() {
-      currentProducts = [...products];
-      renderProducts();
-      loadCart();
-      updateCart();
-      setupEventListeners();
-      updateProductsCount();
-      loadTheme();
-      setupScrollEffects();
-      setupCategoryFilters();
     }
 
-    // Setup event listeners
-    function setupEventListeners() {
-      // Toggle cart sidebar
-      elements.cartIcon.addEventListener('click', toggleCart);
-      elements.closeCart.addEventListener('click', toggleCart);
-      elements.overlay.addEventListener('click', toggleCart);
-
-      // Add to cart buttons
-      elements.productGrid.addEventListener('click', (e) => {
-        if (e.target.closest('.add-to-cart-btn')) {
-          const productId = parseInt(e.target.closest('.add-to-cart-btn').dataset.id);
-          const product = currentProducts.find(p => p.id === productId);
-          if (product) {
-            addToCart(product);
-          }
-        }
-
-        // Quick view button
-        if (e.target.closest('.quick-view-btn')) {
-          const productId = parseInt(e.target.closest('.product-card').dataset.id);
-          const product = currentProducts.find(p => p.id === productId);
-          if (product) {
-            showQuickView(product);
-          }
-        }
-      });
-
-      // Cart item actions
-      elements.cartItemsContainer.addEventListener('click', (e) => {
-        const cartItem = e.target.closest('.cart-item');
-        if (!cartItem) return;
-
-        const productId = parseInt(cartItem.dataset.id);
-
-        if (e.target.closest('.remove-item')) {
-          removeFromCart(productId);
-        } else if (e.target.closest('.quantity-btn')) {
-          const isIncrease = e.target.textContent === '+';
-          updateQuantity(productId, isIncrease);
-        }
-      });
-
-      // Checkout button
-      elements.checkoutBtn.addEventListener('click', checkout);
-
-      // Theme toggle
-      elements.themeToggle.addEventListener('click', toggleTheme);
-
-      // Mobile menu
-      elements.mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-
-      // Explore features button
-      elements.exploreBtn.addEventListener('click', () => {
-        document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
-      });
-
-      // Contact form submission
-      if (elements.contactForm) {
-        elements.contactForm.addEventListener('submit', handleContactSubmit);
+    // Quick view button
+    if (e.target.closest('.quick-view-btn')) {
+      const productId = parseInt(e.target.closest('.product-card').dataset.id);
+      const product = currentProducts.find(p => p.id === productId);
+      if (product) {
+        showQuickView(product);
       }
-
-      // Close mobile menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('#navLinks') && !e.target.closest('#mobileMenuBtn')) {
-          elements.navLinks.classList.remove('active');
-        }
-      });
-
-      // Prevent body scroll when cart is open
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          if (elements.cartSidebar.classList.contains('active')) {
-            toggleCart();
-          }
-          if (elements.navLinks.classList.contains('active')) {
-            toggleMobileMenu();
-          }
-        }
-      });
     }
+  });
 
-    // Setup scroll effects
-    function setupScrollEffects() {
-      window.addEventListener('scroll', () => {
-        // Header scroll effect
-        if (window.scrollY > 50) {
-          elements.header.classList.add('scrolled');
-        } else {
-          elements.header.classList.remove('scrolled');
-        }
-      });
+  // Cart item actions
+  elements.cartItemsContainer.addEventListener('click', (e) => {
+    const cartItem = e.target.closest('.cart-item');
+    if (!cartItem) return;
+
+    const productId = parseInt(cartItem.dataset.id);
+
+    if (e.target.closest('.remove-item')) {
+      removeFromCart(productId);
+    } else if (e.target.closest('.quantity-btn')) {
+      const isIncrease = e.target.textContent === '+';
+      updateQuantity(productId, isIncrease);
     }
+  });
 
-    // Setup category filters
-    function setupCategoryFilters() {
-      elements.categories.addEventListener('click', (e) => {
-        if (e.target.classList.contains('category-btn')) {
-          // Update active category button
-          document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.classList.remove('active');
-          });
-          e.target.classList.add('active');
+  // Checkout button
+  elements.checkoutBtn.addEventListener('click', checkout);
 
-          // Filter products
-          const category = e.target.dataset.category;
-          filterProducts(category);
-        }
-      });
+  // Theme toggle
+  elements.themeToggle.addEventListener('click', toggleTheme);
+
+  // Mobile menu
+  elements.mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+  // Explore features button
+  elements.exploreBtn.addEventListener('click', () => {
+    document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Contact form submission
+  if (elements.contactForm) {
+    elements.contactForm.addEventListener('submit', handleContactSubmit);
+  }
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#navLinks') && !e.target.closest('#mobileMenuBtn')) {
+      elements.navLinks.classList.remove('active');
     }
+  });
 
-    // Filter products by category
-    function filterProducts(category) {
-      activeCategory = category;
-
-      if (category === 'all') {
-        currentProducts = [...products];
-      } else {
-        currentProducts = products.filter(product => product.category === category);
+  // Prevent body scroll when cart is open
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (elements.cartSidebar.classList.contains('active')) {
+        toggleCart();
       }
-
-      renderProducts();
-      updateProductsCount();
+      if (elements.navLinks.classList.contains('active')) {
+        toggleMobileMenu();
+      }
     }
+  });
+}
 
-    // Render products to the page
-    function renderProducts() {
-      // Show loading spinner
-      elements.productGrid.innerHTML = '';
-      elements.loadingSpinner.style.display = 'block';
+// Setup scroll effects
+function setupScrollEffects() {
+  window.addEventListener('scroll', () => {
+    // Header scroll effect
+    if (window.scrollY > 50) {
+      elements.header.classList.add('scrolled');
+    } else {
+      elements.header.classList.remove('scrolled');
+    }
+  });
+}
 
-      // Simulate loading delay for better UX
-      setTimeout(() => {
-        elements.loadingSpinner.style.display = 'none';
+// Setup category filters
+function setupCategoryFilters() {
+  elements.categories.addEventListener('click', (e) => {
+    if (e.target.classList.contains('category-btn')) {
+      // Update active category button
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      e.target.classList.add('active');
 
-        elements.productGrid.innerHTML = currentProducts.map(product => `
+      // Filter products
+      const category = e.target.dataset.category;
+      filterProducts(category);
+    }
+  });
+}
+
+// Filter products by category
+function filterProducts(category) {
+  activeCategory = category;
+
+  if (category === 'all') {
+    currentProducts = [...products];
+  } else {
+    currentProducts = products.filter(product => product.category === category);
+  }
+
+  renderProducts();
+  updateProductsCount();
+}
+
+// Render products to the page
+function renderProducts() {
+  // Show loading spinner
+  elements.productGrid.innerHTML = '';
+  elements.loadingSpinner.style.display = 'block';
+
+  // Simulate loading delay for better UX
+  setTimeout(() => {
+    elements.loadingSpinner.style.display = 'none';
+
+    elements.productGrid.innerHTML = currentProducts.map(product => `
           <div class="product-card animate" data-id="${product.id}">
             ${product.badges ? product.badges.map(badge => `
               <span class="product-badge">${badge}</span>
@@ -331,105 +331,105 @@
           </div>
         `).join('');
 
-        // Add animation delays
-        document.querySelectorAll('.product-card').forEach((card, index) => {
-          card.style.animationDelay = `${index * 0.1}s`;
-        });
-      }, 300);
+    // Add animation delays
+    document.querySelectorAll('.product-card').forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.1}s`;
+    });
+  }, 300);
+}
+
+// Render star rating
+function renderStars(rating) {
+  let stars = '';
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+
+  for (let i = 1; i <= 5; i++) {
+    if (i <= fullStars) {
+      stars += '<i class="fas fa-star"></i>';
+    } else if (i === fullStars + 1 && hasHalfStar) {
+      stars += '<i class="fas fa-star-half-alt"></i>';
+    } else {
+      stars += '<i class="far fa-star"></i>';
     }
+  }
+  return stars;
+}
 
-    // Render star rating
-    function renderStars(rating) {
-      let stars = '';
-      const fullStars = Math.floor(rating);
-      const hasHalfStar = rating % 1 >= 0.5;
+// Cart functions
+function addToCart(product) {
+  if (product.stock === 0) {
+    showToast(`${product.title} is out of stock!`, false);
+    return;
+  }
 
-      for (let i = 1; i <= 5; i++) {
-        if (i <= fullStars) {
-          stars += '<i class="fas fa-star"></i>';
-        } else if (i === fullStars + 1 && hasHalfStar) {
-          stars += '<i class="fas fa-star-half-alt"></i>';
-        } else {
-          stars += '<i class="far fa-star"></i>';
-        }
-      }
-      return stars;
+  const existingItem = cart.find(item => item.id === product.id);
+
+  if (existingItem) {
+    if (existingItem.quantity >= product.stock) {
+      showToast(`Only ${product.stock} items available in stock!`, false);
+      return;
     }
+    existingItem.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      maxStock: product.stock
+    });
+  }
 
-    // Cart functions
-    function addToCart(product) {
-      if (product.stock === 0) {
-        showToast(`${product.title} is out of stock!`, false);
+  saveCart();
+  updateCart();
+  showToast(`${product.title} added to cart!`);
+
+  // Animate cart icon
+  elements.cartIcon.style.transform = 'scale(1.2)';
+  setTimeout(() => {
+    elements.cartIcon.style.transform = 'scale(1)';
+  }, 300);
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+  saveCart();
+  updateCart();
+  showToast('Item removed from cart', false);
+}
+
+function updateQuantity(productId, isIncrease) {
+  const item = cart.find(item => item.id === productId);
+
+  if (item) {
+    if (isIncrease) {
+      if (item.quantity >= item.maxStock) {
+        showToast(`Only ${item.maxStock} items available in stock!`, false);
         return;
       }
-
-      const existingItem = cart.find(item => item.id === product.id);
-
-      if (existingItem) {
-        if (existingItem.quantity >= product.stock) {
-          showToast(`Only ${product.stock} items available in stock!`, false);
-          return;
-        }
-        existingItem.quantity += 1;
-      } else {
-        cart.push({
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          image: product.image,
-          quantity: 1,
-          maxStock: product.stock
-        });
+      item.quantity += 1;
+    } else {
+      if (item.quantity > 1) {
+        item.quantity -= 1;
       }
-
-      saveCart();
-      updateCart();
-      showToast(`${product.title} added to cart!`);
-
-      // Animate cart icon
-      elements.cartIcon.style.transform = 'scale(1.2)';
-      setTimeout(() => {
-        elements.cartIcon.style.transform = 'scale(1)';
-      }, 300);
     }
+  }
 
-    function removeFromCart(productId) {
-      cart = cart.filter(item => item.id !== productId);
-      saveCart();
-      updateCart();
-      showToast('Item removed from cart', false);
-    }
+  saveCart();
+  updateCart();
+}
 
-    function updateQuantity(productId, isIncrease) {
-      const item = cart.find(item => item.id === productId);
+function updateCart() {
+  renderCartItems();
+  updateCartTotals();
+  updateCartCount();
+}
 
-      if (item) {
-        if (isIncrease) {
-          if (item.quantity >= item.maxStock) {
-            showToast(`Only ${item.maxStock} items available in stock!`, false);
-            return;
-          }
-          item.quantity += 1;
-        } else {
-          if (item.quantity > 1) {
-            item.quantity -= 1;
-          }
-        }
-      }
-
-      saveCart();
-      updateCart();
-    }
-
-    function updateCart() {
-      renderCartItems();
-      updateCartTotals();
-      updateCartCount();
-    }
-
-    function renderCartItems() {
-      if (cart.length === 0) {
-        elements.cartItemsContainer.innerHTML = `
+function renderCartItems() {
+  if (cart.length === 0) {
+    elements.cartItemsContainer.innerHTML = `
           <div class="empty-cart">
             <div class="empty-cart-icon">
               <i class="fas fa-shopping-cart"></i>
@@ -441,10 +441,10 @@
             </button>
           </div>
         `;
-        return;
-      }
+    return;
+  }
 
-      elements.cartItemsContainer.innerHTML = cart.map(item => `
+  elements.cartItemsContainer.innerHTML = cart.map(item => `
         <div class="cart-item" data-id="${item.id}">
           <img src="${item.image}" alt="${item.title}" class="cart-item-image" loading="lazy">
           <div class="cart-item-details">
@@ -463,68 +463,68 @@
           </div>
         </div>
       `).join('');
-    }
+}
 
-    function updateCartTotals() {
-      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const shipping = subtotal > 100 ? 0 : 5;
-      const discount = subtotal > 200 ? subtotal * 0.1 : 0;
-      const total = subtotal + shipping - discount;
+function updateCartTotals() {
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const shipping = subtotal > 100 ? 0 : 5;
+  const discount = subtotal > 200 ? subtotal * 0.1 : 0;
+  const total = subtotal + shipping - discount;
 
-      elements.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-      elements.cartTotal.textContent = `$${total.toFixed(2)}`;
-      elements.shippingCost.textContent = subtotal > 100 ? 'FREE' : `$${shipping.toFixed(2)}`;
-      elements.shippingCost.style.color = subtotal > 100 ? 'var(--success)' : 'var(--text-primary)';
-      elements.discount.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
-      elements.discount.style.color = discount > 0 ? 'var(--success)' : 'var(--text-primary)';
+  elements.cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+  elements.cartTotal.textContent = `$${total.toFixed(2)}`;
+  elements.shippingCost.textContent = subtotal > 100 ? 'FREE' : `$${shipping.toFixed(2)}`;
+  elements.shippingCost.style.color = subtotal > 100 ? 'var(--success)' : 'var(--text-primary)';
+  elements.discount.textContent = discount > 0 ? `-$${discount.toFixed(2)}` : '$0.00';
+  elements.discount.style.color = discount > 0 ? 'var(--success)' : 'var(--text-primary)';
 
-      elements.checkoutBtn.disabled = cart.length === 0;
+  elements.checkoutBtn.disabled = cart.length === 0;
 
-      if (discount > 0 && !elements.checkoutBtn.disabled) {
-        showToast(`🎉 You saved $${discount.toFixed(2)} with 10% discount!`);
-      }
-    }
+  if (discount > 0 && !elements.checkoutBtn.disabled) {
+    showToast(`🎉 You saved $${discount.toFixed(2)} with 10% discount!`);
+  }
+}
 
-    function updateCartCount() {
-      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-      elements.cartCount.textContent = count;
+function updateCartCount() {
+  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  elements.cartCount.textContent = count;
 
-      if (count > 0) {
-        elements.cartCount.style.display = 'flex';
-      } else {
-        elements.cartCount.style.display = 'none';
-      }
-    }
+  if (count > 0) {
+    elements.cartCount.style.display = 'flex';
+  } else {
+    elements.cartCount.style.display = 'none';
+  }
+}
 
-    function updateProductsCount() {
-      elements.productsCount.textContent = `${currentProducts.length} Products`;
-    }
+function updateProductsCount() {
+  elements.productsCount.textContent = `${currentProducts.length} Products`;
+}
 
-    function toggleCart() {
-      elements.cartSidebar.classList.toggle('active');
-      elements.overlay.classList.toggle('active');
-      document.body.style.overflow = elements.cartSidebar.classList.contains('active') ? 'hidden' : '';
-      elements.navLinks.classList.remove('active');
-    }
+function toggleCart() {
+  elements.cartSidebar.classList.toggle('active');
+  elements.overlay.classList.toggle('active');
+  document.body.style.overflow = elements.cartSidebar.classList.contains('active') ? 'hidden' : '';
+  elements.navLinks.classList.remove('active');
+}
 
-    function toggleMobileMenu() {
-      elements.navLinks.classList.toggle('active');
-    }
+function toggleMobileMenu() {
+  elements.navLinks.classList.toggle('active');
+}
 
-    function showToast(message, isSuccess = true) {
-      elements.toastMessage.textContent = message;
-      elements.toast.style.borderLeftColor = isSuccess ? 'var(--success)' : 'var(--danger)';
-      elements.toast.querySelector('i').style.color = isSuccess ? 'var(--success)' : 'var(--danger)';
+function showToast(message, isSuccess = true) {
+  elements.toastMessage.textContent = message;
+  elements.toast.style.borderLeftColor = isSuccess ? 'var(--success)' : 'var(--danger)';
+  elements.toast.querySelector('i').style.color = isSuccess ? 'var(--success)' : 'var(--danger)';
 
-      elements.toast.classList.add('show');
+  elements.toast.classList.add('show');
 
-      setTimeout(() => {
-        elements.toast.classList.remove('show');
-      }, 3000);
-    }
+  setTimeout(() => {
+    elements.toast.classList.remove('show');
+  }, 3000);
+}
 
-    function showQuickView(product) {
-      const modalHTML = `
+function showQuickView(product) {
+  const modalHTML = `
         <div class="quick-view-modal">
           <div class="modal-content">
             <button class="close-modal">&times;</button>
@@ -549,10 +549,10 @@
         </div>
       `;
 
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-      const style = document.createElement('style');
-      style.textContent = `
+  const style = document.createElement('style');
+  style.textContent = `
         .quick-view-modal {
           position: fixed;
           top: 0;
@@ -621,30 +621,30 @@
           }
         }
       `;
-      document.head.appendChild(style);
+  document.head.appendChild(style);
 
-      const modal = document.querySelector('.quick-view-modal');
-      const closeBtn = modal.querySelector('.close-modal');
+  const modal = document.querySelector('.quick-view-modal');
+  const closeBtn = modal.querySelector('.close-modal');
 
-      closeBtn.addEventListener('click', () => {
-        modal.remove();
-        style.remove();
-      });
+  closeBtn.addEventListener('click', () => {
+    modal.remove();
+    style.remove();
+  });
 
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.remove();
-          style.remove();
-        }
-      });
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.remove();
+      style.remove();
     }
+  });
+}
 
-    function checkout() {
-      if (cart.length === 0) return;
+function checkout() {
+  if (cart.length === 0) return;
 
-      const total = parseFloat(elements.cartTotal.textContent.replace('$', ''));
+  const total = parseFloat(elements.cartTotal.textContent.replace('$', ''));
 
-      const modalHTML = `
+  const modalHTML = `
         <div class="checkout-modal">
           <div class="modal-content">
             <button class="close-checkout">&times;</button>
@@ -677,10 +677,10 @@
         </div>
       `;
 
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-      const style = document.createElement('style');
-      style.textContent = `
+  const style = document.createElement('style');
+  style.textContent = `
         .checkout-modal {
           position: fixed;
           top: 0;
@@ -771,96 +771,96 @@
           z-index: 2;
         }
       `;
-      document.head.appendChild(style);
+  document.head.appendChild(style);
 
-      const modal = document.querySelector('.checkout-modal');
-      const closeBtn = modal.querySelector('.close-checkout');
+  const modal = document.querySelector('.checkout-modal');
+  const closeBtn = modal.querySelector('.close-checkout');
 
-      closeBtn.addEventListener('click', () => {
-        modal.remove();
-        style.remove();
-      });
+  closeBtn.addEventListener('click', () => {
+    modal.remove();
+    style.remove();
+  });
 
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.remove();
-          style.remove();
-        }
-      });
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.remove();
+      style.remove();
     }
+  });
+}
 
-    function completeCheckout() {
-      cart = [];
-      saveCart();
-      updateCart();
-      toggleCart();
+function completeCheckout() {
+  cart = [];
+  saveCart();
+  updateCart();
+  toggleCart();
 
-      const modal = document.querySelector('.checkout-modal');
-      if (modal) {
-        modal.remove();
-      }
+  const modal = document.querySelector('.checkout-modal');
+  if (modal) {
+    modal.remove();
+  }
 
-      showToast('Order placed successfully! Thank you for shopping with us.');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  showToast('Order placed successfully! Thank you for shopping with us.');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-    // Contact form handler
-    function handleContactSubmit(e) {
-      e.preventDefault();
-      
-      const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
-      };
+// Contact form handler
+function handleContactSubmit(e) {
+  e.preventDefault();
 
-      // Simulate form submission
-      showToast('Message sent successfully! We\'ll get back to you soon.');
-      
-      // Reset form
-      elements.contactForm.reset();
-    }
+  const formData = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    subject: document.getElementById('subject').value,
+    message: document.getElementById('message').value
+  };
 
-    // Theme functions
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  // Simulate form submission
+  showToast('Message sent successfully! We\'ll get back to you soon.');
 
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
+  // Reset form
+  elements.contactForm.reset();
+}
 
-      const icon = elements.themeToggle.querySelector('i');
-      icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+// Theme functions
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
-      document.body.style.opacity = '0.8';
-      setTimeout(() => {
-        document.body.style.opacity = '1';
-      }, 300);
-    }
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
 
-    function loadTheme() {
-      const savedTheme = localStorage.getItem('theme') ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const icon = elements.themeToggle.querySelector('i');
+  icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 
-      document.documentElement.setAttribute('data-theme', savedTheme);
-      const icon = elements.themeToggle.querySelector('i');
-      icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    }
+  document.body.style.opacity = '0.8';
+  setTimeout(() => {
+    document.body.style.opacity = '1';
+  }, 300);
+}
 
-    // Local storage functions
-    function saveCart() {
-      localStorage.setItem('cardShopCart', JSON.stringify(cart));
-    }
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-    function loadCart() {
-      const savedCart = localStorage.getItem('cardShopCart');
-      if (savedCart) {
-        cart = JSON.parse(savedCart);
-      }
-    }
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  const icon = elements.themeToggle.querySelector('i');
+  icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+}
 
-    // Make functions globally available
-    window.addToCart = addToCart;
-    window.toggleCart = toggleCart;
-    window.completeCheckout = completeCheckout;
+// Local storage functions
+function saveCart() {
+  localStorage.setItem('cardShopCart', JSON.stringify(cart));
+}
+
+function loadCart() {
+  const savedCart = localStorage.getItem('cardShopCart');
+  if (savedCart) {
+    cart = JSON.parse(savedCart);
+  }
+}
+
+// Make functions globally available
+window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.completeCheckout = completeCheckout;
